@@ -8,20 +8,28 @@
             <div class="flex gap-3 items-center" v-for="(item) in transactions" :key="item.id">
                 <div class="flex-1 shrink-0 flex-col gap-1">
                     <div class="capitalize font-normal">
-                        {{ item.receiverAccount.user.firstName }}
-                        {{ item.receiverAccount.user.lastName }}
+                        <template v-if="getBadge(item) === 'Debit'">
+                            {{ item.receiverAccount.user.firstName }}
+                            {{ item.receiverAccount.user.lastName }}
+                        </template>
+                        <template v-else>
+                            {{ item.senderAccount.user.firstName }}
+                            {{ item.senderAccount.user.lastName }}
+                        </template>
                     </div>
                     <div class="text-sm"
-                        :class="{ 'text-red-600': item.type === 'Debit', 'text-green-600': item.type !== 'Debit' }">
-                        {{ item.type === 'Debit' ? '-' : '+' }} N{{ Intl.NumberFormat().format(item.amount) }}
+                        :class="{ 'text-red-600': getBadge(item) === 'Debit', 'text-green-600': getBadge(item) !== 'Debit' }">
+                        {{ getBadge(item) === 'Debit' ? '-' : '+' }} N{{ Intl.NumberFormat().format(item.amount) }}
                     </div>
                 </div>
                 <div class="flex flex-col shrink-0 items-end gap-1">
                     <div :class="{
-                        'bg-green-700 text-green-100': item.type === 'Credit',
-                        'bg-red-700 text-red-100': item.type === 'Debit',
-                        'bg-blue-700 text-blue-100': item.type === 'Top Up',
-                    }" class="px-2.5 py-1 rounded-full text-[10px]">{{ item.type }}</div>
+                        'bg-green-700 text-green-100': getBadge(item) === 'Credit',
+                        'bg-red-700 text-red-100': getBadge(item) === 'Debit',
+                        'bg-blue-700 text-blue-100': getBadge(item) === 'Top Up',
+                    }" class="px-2.5 py-1 rounded-full text-[10px]">
+                        {{ getBadge(item) }}
+                    </div>
                     <small class="opacity-60">
                         {{ moment(item.createdAt).format('YYYY-MM-DD hh:mm a') }}
                     </small>
@@ -58,5 +66,15 @@ async function load() {
             }
             notify.error(message)
         })
+}
+
+function getBadge(item: any) {
+    switch (true) {
+        case (item.senderAccount.user.id === user.profile?.id && item.type === 'Top Up') || (item.receiverAccount.user.id === user.profile?.id && item.type === 'Top Up'):
+            return 'Top Up'
+        case (item.senderAccount.user.id === user.profile?.id && item.type === 'Debit') || (item.receiverAccount.user.id === user.profile?.id && item.type === 'Credit'):
+            return 'Debit'
+        default: return 'Credit'
+    }
 }
 </script>
