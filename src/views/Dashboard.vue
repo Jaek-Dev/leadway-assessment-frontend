@@ -44,4 +44,13 @@ defineOptions({
 })
 </script>
 
-<style></style>
+<style scoped lang="postcss">
+a {
+    @apply px-2.5 py-1.5 rounded-md
+}
+
+.active {
+    @apply bg-green-400;
+    @apply text-white;
+}
+</style>
