@@ -7,6 +7,7 @@ interface Profile {
 	lastName: string;
 	emailAddress: string;
 	phoneNumber: string;
+	balance: number;
 }
 
 export const useUserStore = defineStore("user", () => {

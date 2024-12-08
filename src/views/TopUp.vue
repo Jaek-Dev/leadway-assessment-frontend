@@ -20,43 +20,26 @@
 import { axios } from '@/App.vue';
 import { useUserStore } from '@/stores/user';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
 import { number, object } from 'yup';
 
 const notify = useToast();
-const transactions = ref<any[]>([]);
 const user = useUserStore();
 const router = useRouter();
-
 const schema = object().shape({
     amount: number().required().min(100)
 })
 
-onMounted(load)
-async function load() {
-    return axios.get('/transaction', { headers: { Authorization: `Bearer ${user.token}` } })
-        .then(async (res) => {
-            transactions.value = res.data;
-        })
-        .catch(e => {
-            let message = 'Something went wrong';
-            if (e.data && e.data.message) {
-                const m = e.data.message;
-                message = Array.isArray(m) ? m[0] : m
-            } else if (e.message) {
-                message = e.message
-            }
-            notify.error(message)
-        })
-}
 async function submit(data: any) {
     data.amount = Number(data.amount);
     return axios.post('/transaction/top-up', data, { headers: { Authorization: `Bearer ${user.token}` } })
-        .then(async (res) => {
+        .then(async () => {
             notify.success('Top-up successful.')
-            router.push({ name: 'transactions' })
+            if (user.profile) {
+                user.profile.balance += data.amount;
+            }
+            await router.push({ name: 'transactions' })
         })
         .catch(e => {
             let message = 'Something went wrong';

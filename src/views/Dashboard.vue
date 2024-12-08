@@ -11,10 +11,15 @@
                     <div class="text-xl">{{ user.profile?.firstName }} {{ user.profile?.lastName }}</div>
                     <div class="text-sm">{{ user.profile?.emailAddress }}</div>
                 </div>
-                <button @click="() => $router.push({ name: 'logout' })"
-                    class="rounded-lg bg-red-700 hover:bg-red-800 shrink-0 text-white px-2.5 py-1.5 text-sm">
-                    Logout
-                </button>
+                <div class="flex flex-col gap-1.5 items-end">
+                    <small class="text-sm">
+                        Balance: N{{ Intl.NumberFormat().format(user.profile?.balance || 0) }}
+                    </small>
+                    <button @click="() => $router.push({ name: 'logout' })"
+                        class="text-blue-600 border-blue-600 font-mono border rounded-full p-0.5 px-2 text-[9px]">
+                        Logout
+                    </button>
+                </div>
             </div>
             <div class="flex items-center gap-4 border-b p-4">
                 <router-link active-class="active" exact-active-class="active"

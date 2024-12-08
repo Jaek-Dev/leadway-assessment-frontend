@@ -42,9 +42,12 @@ const schema = object().shape({
 async function submit(data: any) {
     data.amount = Number(data.amount);
     return axios.post('/transaction/transfer', data, { headers: { Authorization: `Bearer ${user.token}` } })
-        .then(async (res) => {
+        .then(async () => {
             notify.success(data.amount + ' transferred to ' + data.accountNumber + ' successful.')
-            router.push({ name: 'transactions' })
+            if (user.profile) {
+                user.profile.balance -= data.amount;
+            }
+            await router.push({ name: 'transactions' })
         })
         .catch(e => {
             let message = 'Something went wrong';
