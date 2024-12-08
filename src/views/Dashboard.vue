@@ -9,7 +9,10 @@
                 </div>
                 <div class="flex-1 shrink-0">
                     <div class="text-xl">{{ user.profile?.firstName }} {{ user.profile?.lastName }}</div>
-                    <div class="text-sm">{{ user.profile?.emailAddress }}</div>
+                    <div class="text-xs">
+                        <div class="font-semibold">Account Number</div>
+                        {{ user.profile?.accountNumber }}
+                    </div>
                 </div>
                 <div class="flex flex-col gap-1.5 items-end">
                     <small class="text-sm">
