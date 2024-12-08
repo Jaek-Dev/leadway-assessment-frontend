@@ -52,8 +52,8 @@ const router = createRouter({
 			children: [
 				{
 					name: "transactions",
-					path: "transactions",
-					alias: "",
+					alias: "transactions",
+					path: "",
 					component: () => import("../views/Transactions.vue"),
 				},
 				{
@@ -79,6 +79,6 @@ router.beforeEach(async () => {
 		}, 1500);
 	});
 });
-router.afterEach(done);
+router.afterEach(() => done());
 
 export default router;

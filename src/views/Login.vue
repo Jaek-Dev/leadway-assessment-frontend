@@ -65,7 +65,7 @@ async function submit(data: any) {
                 user.setProfile(data);
                 user.setToken(res.data.accessToken);
             })
-            router.push({ name: 'dashboard' });
+            await router.push({ name: 'transactions' });
         })
         .catch(e => {
             let message = 'Something went wrong';
